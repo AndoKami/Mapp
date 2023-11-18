@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-export default function AlphabetList({selected, AlphList}) {
+export default function AlphabetList({setLetter, AlphList}) {
   return (
     <View
       style={{
@@ -7,7 +7,10 @@ export default function AlphabetList({selected, AlphList}) {
         flexDirection: 'column',
       }}>
       {AlphList.map(alph => (
-        <Text style={{paddingBottom: alph === 'Z' ? 0 : 7}} key={alph}>
+        <Text
+          style={{paddingBottom: alph === 'Z' ? 0 : 7}}
+          key={alph}
+          onPress={() => setLetter(alph)}>
           {alph}
         </Text>
       ))}

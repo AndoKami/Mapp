@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   View,
   ScrollView,
@@ -36,7 +38,6 @@ export default function Contact() {
     'Y',
     'Z',
   ];
-
   const mockData = [
     {
       name: 'Duncan Williams',
@@ -79,6 +80,17 @@ export default function Contact() {
       phone: '1-651-347-2562',
     },
   ];
+  let [scrollTo, setScrollTo] = React.useState([]);
+  const scrollViewRef = React.useRef(null);
+
+  const handleScroll = letter => {
+    if (letter === 'A') {
+      scrollViewRef.current.scrollTo({y: 1, animated: true});
+    } else if (scrollTo[letter]) {
+      scrollViewRef.current.scrollTo({y: scrollTo[letter], animated: true});
+    }
+  };
+
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
       <View
@@ -96,10 +108,22 @@ export default function Contact() {
           flexDirection: 'row',
           height: '94%',
         }}>
-        <ScrollView style={{padding: 0}} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={{padding: 0}}
+          showsVerticalScrollIndicator={false}
+          ref={scrollViewRef}>
           <View>
             {AlphList.map(alph => (
-              <View style={{padding: 10}}>
+              <View
+                key={alph}
+                style={{padding: 10}}
+                onLayout={event => {
+                  const layout = event.nativeEvent.layout;
+                  setScrollTo(prevScrollTo => ({
+                    ...prevScrollTo,
+                    [alph]: layout.y,
+                  }));
+                }}>
                 <View
                   style={{
                     padding: 10,
@@ -174,7 +198,7 @@ export default function Contact() {
             ))}
           </View>
         </ScrollView>
-        <AlphabetList AlphList={AlphList} />
+        <AlphabetList setLetter={handleScroll} AlphList={AlphList} />
       </View>
     </SafeAreaView>
   );
